@@ -37,11 +37,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Trivy Installation
-      uses: aquasecurity/setup-trivy@v0.2.3
-      with: 
-        version: v0.65.0
-        cache: true
-        
+      run: |
+       sudo apt-get install wget apt-transport-https gnupg lsb-release
+       wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+       echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list
+       sudo apt-get update -y
+       sudo apt-get install trivy -y
     - name: Trivy FS Scan
       run: trivy fs --format table -o fs-report.json
 
