@@ -32,6 +32,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
     - name: Trivy Installation
       run: |
         sudo apt-get install -y wget apt-transport-https gnupg lsb-release
@@ -41,13 +42,13 @@ jobs:
         sudo apt-get install -y trivy  
       
     - name: Trivy FS Scan
-      run: trivy fs --format table -o fs-report.json
+      run: trivy fs . --format table -o fs-report.json
 
     - name: GitLeaks Installation
       run: sudo apt install gitleaks -y
 
     - name: GitLeaks code Scan
-      run: gitleaks detect source . -r gitleaks-report.json -f json
+      run: gitleaks detect --source . --report-path gitleaks-report.json --format json
 
 
 
