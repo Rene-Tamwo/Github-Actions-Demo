@@ -63,7 +63,7 @@ jobs:
       run: mvn test
 
 
-  buil_project_sonar-scan:
+  buil_project_and_sonar_scan:
     runs-on: self-hosted
     needs: test
 
