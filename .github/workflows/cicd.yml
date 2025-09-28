@@ -130,7 +130,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         push: true
-        tags: adijaiswal/bankapp:latest
+        tags: tamwo/dockerfile:latest
 
  
  
