@@ -63,11 +63,26 @@ jobs:
       run: mvn test
 
 
-  buil_project_and_sonar_scan:
+  build_project_and_sonar_scan:
     runs-on: self-hosted
     needs: test
 
     steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build Project
+      run: mvn package
+    - name: Upload JAR artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-jar
+        path: target/*.jar
+    
     - uses: actions/checkout@v4
       with:
       # Disabling shallow clone is recommended for improving relevancy of reporting.
@@ -87,7 +102,43 @@ jobs:
       env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }} #OPTIONAL
-          
+
+
+
+  
+
+  builds_docker_image_and_push:
+    runs-on: self-hosted
+    needs: build_project_and_sonar_scan
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download JAR Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name : app-jar
+        path: app # this will download JAR to ./app folder
+        
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+     
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: tamwo/dockerfile:latest
+
+ 
+ 
+
+  
 
       
 
