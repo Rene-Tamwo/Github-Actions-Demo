@@ -62,6 +62,12 @@ jobs:
     - name: Unit Test Cases
       run: mvn test
 
+
+  buil_project_sonar-scan:
+    runs-on: self-hosted
+    needs: test
+
+    steps:
     - uses: actions/checkout@v4
       with:
       # Disabling shallow clone is recommended for improving relevancy of reporting.
