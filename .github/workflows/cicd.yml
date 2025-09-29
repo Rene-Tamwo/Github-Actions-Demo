@@ -133,7 +133,7 @@ jobs:
         push: true
         tags: tamwo/bankapp:latest
 
- 
+
  
       
 
