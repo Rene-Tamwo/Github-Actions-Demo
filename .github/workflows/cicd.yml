@@ -133,6 +133,17 @@ jobs:
         push: true
         tags: tamwo/bankapp:latest
 
+ 
+
+  deploy_to_kubernetes:
+    runs-on: self-hosted
+    needs: build_project_and_sonar_scan
+    
+    steps:
+    
+
+
+
 
 
       
